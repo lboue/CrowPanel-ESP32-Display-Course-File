@@ -28,15 +28,17 @@ if not, please do not include it. It will waste your Flash space.
  ******************************************************************************/
 #include "gfx_conf.h"
 
-#include <DHT20.h>
-DHT20  dht20(&Wire1);
+#include <AHTxx.h>
+AHTxx aht10(AHTXX_ADDRESS_X38, AHT1x_SENSOR); //sensor address, sensor type
+//DHT20  dht20(&Wire1);
 
 static lv_disp_draw_buf_t draw_buf;
 static lv_color_t disp_draw_buf1[screenWidth * screenHeight / 8];
 static lv_color_t disp_draw_buf2[screenWidth * screenHeight / 8];
 static lv_disp_drv_t disp_drv;
-float tem_float = 0;
-float hum_float = 0;
+//float tem_float = 0;
+//float hum_float = 0;
+float ahtValue;                               //to store T/RH result
 
 /* Display flushing */
 void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p)
@@ -79,6 +81,14 @@ void setup()
 {
   Serial.begin(9600);
   Serial.println("LVGL Widgets Demo");
+
+  while (aht10.begin() != true) //for ESP-01 use aht10.begin(0, 2);
+  {
+    Serial.println(F("AHT1x not connected or fail to load calibration coefficient")); //(F()) save string to flash & keeps dynamic memory free
+
+    delay(5000);
+  }
+  Serial.println(F("AHT10 OK"));
 
   //GPIO init
 #if defined (CrowPanel_50) || defined (CrowPanel_70)
@@ -144,6 +154,7 @@ void setup()
 
 void my_timer(lv_timer_t * timer)
 {
+    /*
     int status      = dht20.read();
     char *tem       = (char *)malloc(24);
     char *hum       = (char *)malloc(24);
@@ -182,6 +193,7 @@ void my_timer(lv_timer_t * timer)
       Serial.print("Unknown error,\t");
       break;
     }
+    */
     lv_chart_set_next_value(ui_Chart1, ui_Chart1_series_1, tem_float);
     lv_chart_set_next_value(ui_Chart1, ui_Chart1_series_2, hum_float);
     lv_chart_refresh(ui_Chart1);

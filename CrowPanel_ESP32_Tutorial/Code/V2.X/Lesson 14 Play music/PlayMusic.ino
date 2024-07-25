@@ -10,10 +10,10 @@ Audio audio;
 #define I2S_LRC       18
 
 //7.0
-#define SD_MOSI 11
-#define SD_MISO 13
-#define SD_SCK 12
-#define SD_CS 10
+#define SD_MOSI       11
+#define SD_MISO       13
+#define SD_SCK        12
+#define SD_CS         10
 
 void setup() {
   // put your setup code here, to run once:
@@ -23,8 +23,11 @@ void setup() {
   SPI.begin(SD_SCK, SD_MISO, SD_MOSI);
   SPI.setFrequency(1000000);
   SD.begin(SD_CS);
+
   audio.setPinout(I2S_BCLK, I2S_LRC, I2S_DOUT);
+  Serial.println("[Audio] Setting volume to 21");
   audio.setVolume(21); // 0...21
+  Serial.println("[Audio] Reading 123.mp3 file from SDCard");
   audio.connecttoFS(SD, "/123.mp3");
 }
 

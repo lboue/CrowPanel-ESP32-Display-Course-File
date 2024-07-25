@@ -17,7 +17,7 @@ Audio audio;
 
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin( 9600 ); /*Initialize the serial port*/
+  Serial.begin(115200); /*Initialize the serial port*/
   pinMode(SD_CS, OUTPUT);
   digitalWrite(SD_CS, HIGH);
   SPI.begin(SD_SCK, SD_MISO, SD_MOSI);
